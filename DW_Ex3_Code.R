@@ -287,10 +287,23 @@ colnames(clean_test)[1] <- "Volunteer"
 clean_total <- rbind(clean_train, clean_test)
 
 # Store entire clean data set in a file X_test_train.txt
-write.table(clean_total, file = "X_test_train.txt", row.names = FALSE, col.names = colnames(clean_total))
+# write.table(clean_total, file = "X_test_train.txt", row.names = FALSE, col.names = colnames(clean_total))
 
-            
+# Create an independent tidy dataset with the average of each variable
+# for each activity and each subject
 
+mean_table <- clean_total
+
+# Make column names unique
+
+valid_column_names <- make.names(names = names(mean_table), unique = TRUE, allow_ = TRUE)
+names(mean_table) <- valid_column_names
+
+mean_table <- mean_table %>%
+  group_by(Volunteer, ActivityLabel) %>%
+  summarise(activity_mean = mean(calc_mean))
+
+write.table(mean_table, file = "tidy_mean_table.txt", row.names = FALSE, col.names = colnames(mean_table))
 
   
   
